@@ -184,23 +184,24 @@ def load_text_chroma(input_, output_, collection_name, create_collection=False):
     )
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-c', '--convert', help='Converts PDFs to markdown (Make sure to have a pdf subfolder in your input folder)',
-                    action='store_true')
-parser.add_argument('-n', '--newcollection', help='Create a new collection, and restart the GraphRAG index. (Only do this if this is your first '
-                                                   'time running this.)', action='store_true')
-parser.add_argument('--input_folder', help='The input folder to read files from. (Defaults to `./input`)', default='./input')
-parser.add_argument('--graphrag_input', help='The root folder for the graphRAG project (The folder which contains your settings.yaml)', default='.')
-parser.add_argument('--chroma_dir', help='The location of your chromaDB database', default='./.chroma')
-parser.add_argument('--collection_name', help='The name of your chromaDB collection', default='collection1')
-args = parser.parse_args()
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-c', '--convert', help='Converts PDFs to markdown (Make sure to have a pdf subfolder in your input folder)',
+                      action='store_true')
+  parser.add_argument('-n', '--newcollection', help='Create a new collection, and restart the GraphRAG index. (Only do this if this is your first '
+                                                    'time running this.)', action='store_true')
+  parser.add_argument('--input_folder', help='The input folder to read files from. (Defaults to `./input`)', default='./input')
+  parser.add_argument('--graphrag_input', help='The root folder for the graphRAG project (The folder which contains your settings.yaml)', default='.')
+  parser.add_argument('--chroma_dir', help='The location of your chromaDB database', default='./.chroma')
+  parser.add_argument('--collection_name', help='The name of your chromaDB collection', default='collection1')
+  args = parser.parse_args()
 
-if args.convert:
-    print('CONVERTING PDFs...')
-    multiple(os.path.join(args.input_folder, 'pdfs'), os.path.join(args.input_folder, 'markdown'))
+  if args.convert:
+      print('CONVERTING PDFs...')
+      multiple(os.path.join(args.input_folder, 'pdfs'), os.path.join(args.input_folder, 'markdown'))
 
-print('CREATING CHROMADB...')
-load_text_chroma(os.path.join(args.input_folder, 'markdown'), args.chroma_dir, args.collection_name, args.newcollection)
+  print('CREATING CHROMADB...')
+  load_text_chroma(os.path.join(args.input_folder, 'markdown'), args.chroma_dir, args.collection_name, args.newcollection)
 
-print('CREATING GRAPHRAG INDEX...')
-index_cli(args.graphrag_input, False, False, None, False, False, None, None, None, False)
+  print('CREATING GRAPHRAG INDEX...')
+  index_cli(args.graphrag_input, False, False, None, False, False, None, None, None, False)
